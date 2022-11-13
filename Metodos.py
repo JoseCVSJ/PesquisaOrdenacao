@@ -10,7 +10,7 @@ def insertion(array):
             p -= 1
 
         array[p] = current_element
-    return array
+
 
 def selection(array):
     for index in range(0, len(array)):
@@ -21,7 +21,7 @@ def selection(array):
                 min_index = right
 
         array[index], array[min_index] = array[min_index], array[index]
-    return array
+
 def bubble(array):
     for final in range(len(array), 0, -1):
         exchanging = False
@@ -34,7 +34,7 @@ def bubble(array):
         if not exchanging:
             break
     
-    return array
+
 
 def mergeSort(alist):
     if len(alist)>1:
@@ -66,61 +66,84 @@ def mergeSort(alist):
             alist[k]=righthalf[j]
             j=j+1
             k=k+1
-    return alist
-
-def quickSort(alist):
-    quickSortHelper(alist,0,len(alist)-1)
-    return alist
-
-def quickSortHelper(alist,first,last):
-   if first<last:
-
-       splitpoint = partition(alist,first,last)
-
-       quickSortHelper(alist,first,splitpoint-1)
-       quickSortHelper(alist,splitpoint+1,last)
 
 
-def partition(alist,first,last):
-   pivotvalue = alist[first]
+def quickSort(array, start, end):
+    if start >= end:
+        return
 
-   leftmark = first+1
-   rightmark = last
-
-   done = False
-   while not done:
-
-       while leftmark <= rightmark and alist[leftmark] <= pivotvalue:
-           leftmark = leftmark + 1
-
-def shellSort(array):
-    n = len(array)
-    h = int (n/2)
-    while h > 0:
-        for i in range(h,n):
-            c = array [i]
-            j = i
-            while j>= h and c < array[j - h]:
-                array [j] = array[j - h]
-                j = j-h
-                array[j] = c
-        h = int (h/2.2)
-    return array
+    p = partition(array, start, end)
+    quickSort(array, start, p-1)
+    quickSort(array, p+1, end)
 
 
+def partition(array, start, end):
+    pivot = array[start]
+    low = start + 1
+    high = end
+
+    while True:
+        # If the current value we're looking at is larger than the pivot
+        # it's in the right place (right side of pivot) and we can move left,
+        # to the next element.
+        # We also need to make sure we haven't surpassed the low pointer, since that
+        # indicates we have already moved all the elements to their correct side of the pivot
+        while low <= high and array[high] >= pivot:
+            high = high - 1
+
+        # Opposite process of the one above
+        while low <= high and array[low] <= pivot:
+            low = low + 1
+
+        # We either found a value for both high and low that is out of order
+        # or low is higher than high, in which case we exit the loop
+        if low <= high:
+            array[low], array[high] = array[high], array[low]
+            # The loop continues
+        else:
+            # We exit out of the loop
+            break
+
+    array[start], array[high] = array[high], array[start]
+
+    return high
+
+def shellSort(alist):
+    sublistcount = len(alist)//2
+    while sublistcount > 0:
+
+      for startposition in range(sublistcount):
+        gapInsertionSort(alist,startposition,sublistcount)
+
+      print("After increments of size",sublistcount,
+                                   "The list is",alist)
+
+      sublistcount = sublistcount // 2
+
+def gapInsertionSort(alist,start,gap):
+    for i in range(start+gap,len(alist),gap):
+
+        currentvalue = alist[i]
+        position = i
+
+        while position>=gap and alist[position-gap]>currentvalue:
+            alist[position]=alist[position-gap]
+            position = position-gap
+
+        alist[position]=currentvalue
+        
 def gerarArrayRandom(array,tamaho):
     for i in range(1,tamaho):
         i = randint(1,1000)
         array.append(i)
-    return array
+
 
 
 def gerarArrayCresc(array,tamaho):
     for i in range(1,tamaho + 1):
         array.append(i)
-    return array
+
 
 def gerarArrayDecresc(array,tamaho):
     for i in range(tamaho,0,-1):
         array.append(i)
-    return array
